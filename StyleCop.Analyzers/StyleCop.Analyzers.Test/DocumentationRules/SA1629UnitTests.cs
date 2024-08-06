@@ -982,6 +982,131 @@ public class TestClass
             await VerifyCSharpFixAsync(testCode, DiagnosticResult.EmptyDiagnosticResults, fixedTestCode, CancellationToken.None).ConfigureAwait(false);
         }
 
+        [Fact]
+        [WorkItem(2860, "https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/2860")]
+        public async Task TestPeriodFollowedByQuoteAsync()
+        {
+            var testCode = @"
+/// <summary>
+/// ""This is a test.""
+/// </summary>
+public class TestClass
+{
+}
+";
+            var expected = DiagnosticResult.EmptyDiagnosticResults;
+
+            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [Fact]
+        [WorkItem(2860, "https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/2860")]
+        public async Task TestPeriodFollowedByQuoteWithoutSpaceAsync()
+        {
+            var testCode = @"
+/// <summary>
+/// ""This is a test""{|#0:.|}
+/// </summary>
+public class TestClass
+{
+}
+";
+            var expected = new[]
+            {
+                Diagnostic().WithLocation(0).WithArguments(" not", "preceded"),
+            };
+
+            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [Fact]
+        [WorkItem(2860, "https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/2860")]
+        public async Task TestPeriodFollowedBySingleQuoteAsync()
+        {
+            var testCode = @"
+/// <summary>
+/// 'This is a test.'
+/// </summary>
+public class TestClass
+{
+}
+";
+            var expected = DiagnosticResult.EmptyDiagnosticResults;
+
+            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [Fact]
+        [WorkItem(2860, "https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/2860")]
+        public async Task TestPeriodFollowedBySingleQuoteWithoutSpaceAsync()
+        {
+            var testCode = @"
+/// <summary>
+/// 'This is a test'{|#0:.|}
+/// </summary>
+public class TestClass
+{
+}
+";
+            var expected = new[]
+            {
+                Diagnostic().WithLocation(0).WithArguments(" not", "preceded"),
+            };
+
+            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [Fact]
+        [WorkItem(2860, "https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/2860")]
+        public async Task TestPeriodFollowedByParenthesesAsync()
+        {
+            var testCode = @"
+/// <summary>
+/// (This is a test.)
+/// </summary>
+public class TestClass
+{
+}
+";
+            var expected = DiagnosticResult.EmptyDiagnosticResults;
+
+            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [Fact]
+        [WorkItem(2860, "https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/2860")]
+        public async Task TestPeriodFollowedByTextInParenthesesAsync()
+        {
+            var testCode = @"
+/// <summary>
+/// This is a test (example).
+/// </summary>
+public class TestClass
+{
+}
+";
+            var expected = DiagnosticResult.EmptyDiagnosticResults;
+
+            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [Fact]
+        [WorkItem(2860, "https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/2860")]
+        public async Task TestEndingPeriodAsync()
+        {
+            var testCode = @"
+/// <summary>
+/// This is a test.
+/// </summary>
+public class TestClass
+{
+}
+";
+            var expected = DiagnosticResult.EmptyDiagnosticResults;
+
+            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
+        }
+
         private static Task VerifyCSharpDiagnosticAsync(string source, DiagnosticResult[] expected, CancellationToken cancellationToken)
             => VerifyCSharpDiagnosticAsync(source, testSettings: null, expected, cancellationToken);
 
