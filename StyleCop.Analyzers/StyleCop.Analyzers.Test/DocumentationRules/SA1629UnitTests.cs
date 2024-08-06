@@ -1010,15 +1010,23 @@ public class TestClass
 {
 }
 ";
+            var fixedCode = @"
+/// <summary>
+/// ""This is a test.""
+/// </summary>
+public class TestClass
+{
+}
+";
             var expected = new[]
             {
                 Diagnostic().WithLocation(0).WithArguments(" not", "preceded"),
             };
 
-            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
+            await VerifyCSharpFixAsync(testCode, expected, fixedCode, CancellationToken.None).ConfigureAwait(false);
         }
 
-        [Fact]        
+        [Fact]
         public async Task TestPeriodFollowedBySingleQuoteAsync()
         {
             var testCode = @"
@@ -1045,12 +1053,20 @@ public class TestClass
 {
 }
 ";
+            var fixedCode = @"
+/// <summary>
+/// 'This is a test.'
+/// </summary>
+public class TestClass
+{
+}
+";
             var expected = new[]
             {
                 Diagnostic().WithLocation(0).WithArguments(" not", "preceded"),
             };
 
-            await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
+            await VerifyCSharpFixAsync(testCode, expected, fixedCode, CancellationToken.None).ConfigureAwait(false);
         }
 
         [Fact]
