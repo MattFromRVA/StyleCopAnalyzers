@@ -1000,7 +1000,6 @@ public class TestClass
         }
 
         [Fact]
-        [WorkItem(2860, "https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/2860")]
         public async Task TestPeriodFollowedByQuoteWithoutSpaceAsync()
         {
             var testCode = @"
@@ -1019,8 +1018,7 @@ public class TestClass
             await VerifyCSharpDiagnosticAsync(testCode, expected, CancellationToken.None).ConfigureAwait(false);
         }
 
-        [Fact]
-        [WorkItem(2860, "https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/2860")]
+        [Fact]        
         public async Task TestPeriodFollowedBySingleQuoteAsync()
         {
             var testCode = @"
@@ -1037,7 +1035,6 @@ public class TestClass
         }
 
         [Fact]
-        [WorkItem(2860, "https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/2860")]
         public async Task TestPeriodFollowedBySingleQuoteWithoutSpaceAsync()
         {
             var testCode = @"
@@ -1057,7 +1054,6 @@ public class TestClass
         }
 
         [Fact]
-        [WorkItem(2860, "https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/2860")]
         public async Task TestPeriodFollowedByParenthesesAsync()
         {
             var testCode = @"
@@ -1074,7 +1070,6 @@ public class TestClass
         }
 
         [Fact]
-        [WorkItem(2860, "https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/2860")]
         public async Task TestPeriodFollowedByTextInParenthesesAsync()
         {
             var testCode = @"
@@ -1091,7 +1086,6 @@ public class TestClass
         }
 
         [Fact]
-        [WorkItem(2860, "https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/2860")]
         public async Task TestEndingPeriodAsync()
         {
             var testCode = @"
