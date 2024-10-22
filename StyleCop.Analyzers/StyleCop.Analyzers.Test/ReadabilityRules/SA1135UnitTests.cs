@@ -471,5 +471,55 @@ namespace System.Threading
 
             await VerifyCSharpFixAsync(testCode, expected, fixedCode, CancellationToken.None).ConfigureAwait(false);
         }
+
+        [Fact]
+        public async Task TestAliasToGenericTypeWithSimpleTypeMismatchAsync()
+        {
+            var testCode = @"
+namespace System.Collections
+{
+    using Dictionary = Generic.Dictionary<int, Int32>;
+}
+";
+
+            var fixedCode = @"
+namespace System.Collections
+{
+    using Dictionary = System.Collections.Generic.Dictionary<int, int>;
+}
+";
+
+            DiagnosticResult[] expected =
+            {
+                Diagnostic(SA1135UsingDirectivesMustBeQualified.DescriptorType).WithLocation(4, 5).WithArguments("System.Collections.Generic.Dictionary<int, int>"),
+            };
+
+            await VerifyCSharpFixAsync(testCode, expected, fixedCode, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task TestAliasToGenericTypeWithSimpleTypeMismatchInNestedTypeAsync()
+        {
+            var testCode = @"
+namespace System.Collections
+{
+    using Dictionary = Generic.Dictionary<int, KeyValuePair<int, Int32>>;
+}
+";
+
+            var fixedCode = @"
+namespace System.Collections
+{
+    using Dictionary = System.Collections.Generic.Dictionary<int, System.Collections.Generic.KeyValuePair<int, int>>;
+}
+";
+
+            DiagnosticResult[] expected =
+            {
+                Diagnostic(SA1135UsingDirectivesMustBeQualified.DescriptorType).WithLocation(4, 5).WithArguments("System.Collections.Generic.Dictionary<int, System.Collections.Generic.KeyValuePair<int, int>>"),
+            };
+
+            await VerifyCSharpFixAsync(testCode, expected, fixedCode, CancellationToken.None).ConfigureAwait(false);
+        }
     }
 }

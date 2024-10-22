@@ -120,6 +120,20 @@ namespace StyleCop.Analyzers.ReadabilityRules
 
                     replacements.Add(argument, replacementArgument);
                 }
+                else
+                {
+                    var predefinedType = (PredefinedTypeSyntax)argument;
+                    var specialType = semanticModel.GetTypeInfo(predefinedType, cancellationToken).Type.SpecialType;
+
+                    if (SpecialTypeHelper.TryGetPredefinedType(specialType, out var predefinedTypeSyntax))
+                    {
+                        var replacementArgument = predefinedTypeSyntax
+                            .WithLeadingTrivia(argument.GetLeadingTrivia())
+                            .WithTrailingTrivia(argument.GetTrailingTrivia());
+
+                        replacements.Add(argument, replacementArgument);
+                    }
+                }
             }
 
             var newTypeArgumentList = genericNameSyntax.TypeArgumentList.ReplaceNodes(replacements.Keys, (original, maybeRewritten) => replacements[original]);
